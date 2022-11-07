@@ -23,19 +23,19 @@ class Game {
 
     public function gameStart()
     {
-        $card = new Card();
-        $hand = new Hand();
-        $score = new Score();
-        $player = new Player();
+        $this->card = new Card();
+        $this->hand = new Hand();
+        $this->score = new Score();
+        $this->player = new Player();
 
-        $respons = 'cocntinue';
+        $player_status = 'continue';
 
-        if($respons == 'continue'){
-            $socre = $this->play($card);
-            $result =$this->checkScore($socre);
-            $this->result($result);
+        if($player_status == 'continue'){
+            $this->play();
+            $this->checkScore();
+            $this->judgeContinue();
         }else{
-            $this->end();
+            $this->result($score);
         }
 
     echo 'ゲームを開始します'."\n"; 
@@ -164,54 +164,56 @@ class Game {
     
     }
 
-    public function play($card)
+    public function play()
     {
         //カードをとってくる
-        $deck = $card->createDeck();
-
-        print_r($deck);
+        $deck = $this->card->createDeck();
 
         //カードを配る & あなたのカードはこれです　と出力
-        $player_card = array_rand($deck);
-        $player_card_number = preg_replace('/[^0-9]/', '', $deck[$player_card]);
-        echo 'あなたの1枚目のカードは'.$deck[$player_card].'です'."\n";
+        $player_card_key = array_rand($deck);
+        $player_socre = $deck[$player_card_key]['card_score'];
+        echo 'あなたの1枚目のカードは'.$deck[$player_card_key ]['type'].'の'.$deck[$player_card_key ]['number'].'です'."\n";
 
-        $player_card = array_rand($deck);
-        $player_card_number = preg_replace('/[^0-9]/', '', $deck[$player_card]);
-        echo 'あなたの2枚目のカードは'.$deck[$player_card].'です'."\n";
+        $player_card_key = array_rand($deck);
+        $player_socre += $deck[$player_card_key]['card_score'];
+        echo 'あなたの2枚目のカードは'.$deck[$player_card_key ]['type'].'の'.$deck[$player_card_key ]['number'].'です'."\n";
 
+        $this->score->setPlayerScore($player_socre);
 
         //ディーラのカードを配る　ディラーのカードは不明と出力
-        $dealer_card = array_rand($deck);
-        $dealer_card_number = preg_replace('/[^0-9]/', '', $deck[$dealer_card]);
-        echo 'ディラーのカードは'.$deck[$dealer_card].'です'."\n";
+        $dealer_card_key = array_rand($deck);
+        $dealer_score = $deck[$dealer_card_key]['card_score'];
+        echo 'ディーラー1枚目のカードは'.$deck[$dealer_card_key ]['type'].'の'.$deck[$dealer_card_key ]['number'].'です'."\n";
 
-        $dealer_card = array_rand($deck);
-        $dealer_card_number = preg_replace('/[^0-9]/', '', $deck[$dealer_card]);
+        $dealer_card_key = array_rand($deck);
+        $dealer_score += $deck[$dealer_card_key]['card_score'];
         echo 'ディーラーのカードは分かりません。'."\n";
 
-        return [
-            'player_score' => $player_score,
-            'dealer_score' => $dealer_score
-        ];
+        $this->score->setDealerScore($dealer_score);
         
     }
 
-    public function checkScore($score)
+    public function checkScore()
     {
-        if($score['player_score'] > 21){
-            return 'over';
+        if($this->score->getPlayerScore() > 21){
+            $this->player;
         }
 
     }
 
-    public function result($result)
+
+    public function judgeContinue()
     {
+        echo "もう一枚カードを引きますか? [y/n]: ";
+        if ('y' == trim(fgets($stdin, 64))) {
+            return $player_status = 'continue';
+        }   
 
     }
-
-    public function end()
+    public function result($payer_score,$dealer_score)
     {
-
+        if($payer_score > $dealer_score ||$dealer_score > 21 ){
+            echo "あなたの勝ちです。";
+        }else  echo "あなたの負けです。";
     }
 }    
