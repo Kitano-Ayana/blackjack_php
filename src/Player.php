@@ -6,7 +6,7 @@
  */
 class Player{
 
-    private $response;
+    private $status;
 
     public function judgeContinue(){
 
@@ -16,6 +16,16 @@ class Player{
         $resposne =  trim(fgets($stdin, 64)) == 'y' ? 'continue' : 'stop';
 
         return $resposne;
+    }
+
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    }
+
+    public function getStatus()
+    {
+        return $this->status;
     }
 
 }

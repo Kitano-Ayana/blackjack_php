@@ -13,7 +13,7 @@ docker compose exec app php -v
 docker compose down
 
 # ゲームスタートコマンド
-docker compose exec app php Main.php
+docker compose exec app php Index.php
 
 # ブラックジャックルール説明
 実行開始時、ディーラーとプレイヤー全員に２枚ずつカードが配られる

@@ -45,10 +45,9 @@ class Card
                     'card_score' => $card_score
                 ];
             }
-        }  
+        } ;  
         return $deck;
     }
 
 }
-
 
