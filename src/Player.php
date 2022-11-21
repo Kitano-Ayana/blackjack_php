@@ -23,5 +23,10 @@ class Player{
         $this->status = $status;
     }
 
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
 }
  
