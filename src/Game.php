@@ -23,19 +23,36 @@ class Game {
 
     public function gameStart()
     {
-        $this->card = new Card();
-        $this->hand = new Hand();
-        $this->score = new Score();
-        $this->player = new Player();
+        $this->card = !empty($this->card) ? $this->card : new Card();
+        $this->hand = !empty($this->hand) ? $this->hand : new Hand();
+        $this->score = !empty($this->score) ? $this->score : new Score();
+        $this->player = !empty($this->player) ? $this->player : new Player();
+        $this->dealer = !empty($this->dealer) ? $this->dealer : new Dealer();
 
-        $this->play();
-        $this->checkScore();
-        $this->judgeContinue();
-        $this->result();
-    
+        
+        if($this->player->getStatus() == NULL){
+            $this->firstDeal();
+            $this->dealerPlay();
+            $this->checkScore();
+            $this->judgeContinue();
+            $this->gameStart();
+        }else
+        if($this->player->getStatus() == 'Continue'){
+            $this->continuePlay();
+            $this->dealerPlay();
+            $this->checkScore();
+            $this->judgeContinue();
+            $this->gameStart();
+        }else
+        if($this->player->getStatus() == 'End'){
+           $this->result();
+        }  
+
+            
+        
     }
 
-    public function play()
+    public function firstDeal()
     {
         //カードをとってくる
         $deck = $this->card->createDeck();
@@ -49,6 +66,7 @@ class Game {
         $player_socre += $deck[$player_card_key]['card_score'];
         echo 'あなたの2枚目のカードは'.$deck[$player_card_key ]['type'].'の'.$deck[$player_card_key ]['number'].'です'."\n";
 
+
         $this->score->setPlayerScore($player_socre);
 
         //ディーラのカードを配る　ディラーのカードは不明と出力
@@ -61,13 +79,18 @@ class Game {
         echo 'ディーラーのカードは分かりません。'."\n";
 
         $this->score->setDealerScore($dealer_score);
-        
+        $this->player->setStatus('Continue');     
+    }
+
+    public function continuePlay()
+    {
+
     }
 
     public function checkScore()
     {
         if($this->score->getPlayerScore() > 21){
-            $this->player->setStatus('Over');
+            $this->player->setStatus('End');
         }
 
     }
@@ -83,8 +106,11 @@ class Game {
         }
 
         echo "もう一枚カードを引きますか? [y/n]: ";
-        if ('y' == trim(fgets($stdin, 64))) {
+        if('y' == trim(fgets($stdin, 64))){
             $this->player->setStatus('Continue');
+        }else
+        if('n' == trim(fgets($stdin, 64))){
+            $this->player->setStatus('End');
         }   
 
     }
@@ -93,5 +119,10 @@ class Game {
         if($this->score->getPlayerScore() >  $this->score->getDealerScore() ||$this->score->getDealerScore() > 21 ){
             echo "あなたの勝ちです。";
         }else  echo "あなたの負けです。";
+    }
+
+    public function dealerPlay()
+    {
+        
     }
 }    
