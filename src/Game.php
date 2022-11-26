@@ -33,22 +33,20 @@ class Game {
         if($this->player->getStatus() == NULL){
             $this->firstDeal();
             $this->dealerPlay();
-            $this->checkScore();
             $this->judgeContinue();
             $this->gameStart();
         }else
         if($this->player->getStatus() == 'Continue'){
             $this->continuePlay();
-            $this->dealerPlay();
-            $this->checkScore();
+            if($this->score->getDealerScore() < 17){
+                $this->dealerPlay();
+            }
             $this->judgeContinue();
             $this->gameStart();
         }else
         if($this->player->getStatus() == 'End'){
            $this->result();
         }  
-
-            
         
     }
 
@@ -84,6 +82,16 @@ class Game {
 
     public function continuePlay()
     {
+        //カードをとってくる
+        $deck = $this->card->createDeck();
+
+        //カードを配る & あなたのカードはこれです　と出力
+        $player_card_key = array_rand($deck);
+        $player_socre = $deck[$player_card_key]['card_score'];
+        echo 'あなたのカードは'.$deck[$player_card_key ]['type'].'の'.$deck[$player_card_key ]['number'].'です'."\n";
+
+        //スコアを格納
+        $this->score->setPlayerScore($player_socre);
 
     }
 
@@ -99,6 +107,8 @@ class Game {
     public function judgeContinue()
     {
         $stdin = fopen("php://stdin", "r");
+
+        $player_decision = '';
     
         // fopen に失敗した場合、これを記述しておかないと下の while で無限ループが発生する。
         if ( ! $stdin) {
@@ -106,11 +116,13 @@ class Game {
         }
 
         echo "もう一枚カードを引きますか? [y/n]: ";
-        if('y' == trim(fgets($stdin, 64))){
+        $player_decision = trim(fgets(STDIN));
+        if($player_decision === 'y'){
             $this->player->setStatus('Continue');
         }else
-        if('n' == trim(fgets($stdin, 64))){
+        if($player_decision === 'n'){
             $this->player->setStatus('End');
+            print_r("test");
         }   
 
     }
@@ -119,10 +131,19 @@ class Game {
         if($this->score->getPlayerScore() >  $this->score->getDealerScore() ||$this->score->getDealerScore() > 21 ){
             echo "あなたの勝ちです。";
         }else  echo "あなたの負けです。";
+
+
     }
 
     public function dealerPlay()
     {
-        
+        //カードをとってくる
+        $deck = $this->card->createDeck();
+
+        $dealer_card_key = array_rand($deck);
+        $dealer_score = $deck[$dealer_card_key]['card_score'];
+        echo 'ディーラー1枚目のカードは'.$deck[$dealer_card_key ]['type'].'の'.$deck[$dealer_card_key ]['number'].'です'."\n";
+
+        $this->score->setDealerScore($dealer_score);
     }
 }    
