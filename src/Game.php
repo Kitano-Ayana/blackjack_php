@@ -74,7 +74,7 @@ class Game {
 
         $dealer_card_key = array_rand($deck);
         $dealer_score += $deck[$dealer_card_key]['card_score'];
-        echo 'ディーラーのカードは分かりません。'."\n";
+        echo 'ディーラーの2枚目のカードは分かりません。'."\n";
 
         $this->score->setDealerScore($dealer_score);
         $this->player->setStatus('Continue');     
@@ -91,7 +91,7 @@ class Game {
         echo 'あなたのカードは'.$deck[$player_card_key ]['type'].'の'.$deck[$player_card_key ]['number'].'です'."\n";
 
         //スコアを格納
-        $this->score->setPlayerScore($player_socre);
+        $this->score->setPlayerScore($this->score->getPlayerScore() +$player_socre);
 
     }
 
@@ -100,7 +100,6 @@ class Game {
         if($this->score->getPlayerScore() > 21){
             $this->player->setStatus('End');
         }
-
     }
 
 
@@ -122,12 +121,13 @@ class Game {
         }else
         if($player_decision === 'n'){
             $this->player->setStatus('End');
-            print_r("test");
         }   
 
     }
     public function result()
     {
+        echo "あなたのカードスコアは、".$this->score->getPlayerScore()."です。\n";
+        echo "ディーラのカードスコアは、".$this->score->getDealerScore()."です。\n";
         if($this->score->getPlayerScore() >  $this->score->getDealerScore() ||$this->score->getDealerScore() > 21 ){
             echo "あなたの勝ちです。";
         }else  echo "あなたの負けです。";
@@ -142,8 +142,8 @@ class Game {
 
         $dealer_card_key = array_rand($deck);
         $dealer_score = $deck[$dealer_card_key]['card_score'];
-        echo 'ディーラー1枚目のカードは'.$deck[$dealer_card_key ]['type'].'の'.$deck[$dealer_card_key ]['number'].'です'."\n";
+        echo 'ディーラーのカードは'.$deck[$dealer_card_key ]['type'].'の'.$deck[$dealer_card_key ]['number'].'です'."\n";
 
-        $this->score->setDealerScore($dealer_score);
+        $this->score->setDealerScore($this->score->getDealerScore() + $dealer_score);
     }
 }    
