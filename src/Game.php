@@ -29,13 +29,14 @@ class Game {
         $this->player = !empty($this->player) ? $this->player : new Player();
         $this->dealer = !empty($this->dealer) ? $this->dealer : new Dealer();
 
-        
+        //最初のゲーム
         if($this->player->getStatus() == NULL){
             $this->firstDeal();
             $this->dealerPlay();
             $this->judgeContinue();
             $this->gameStart();
         }else
+        //２回目以降のゲーム
         if($this->player->getStatus() == 'Continue'){
             $this->continuePlay();
             if($this->score->getDealerScore() < 17){
@@ -44,6 +45,7 @@ class Game {
             $this->judgeContinue();
             $this->gameStart();
         }else
+        //プレイヤーがゲーム終了を選択
         if($this->player->getStatus() == 'End'){
            $this->result();
         }  
@@ -67,7 +69,7 @@ class Game {
 
         $this->score->setPlayerScore($player_socre);
 
-        //ディーラのカードを配る　ディラーのカードは不明と出力
+        //ディーラのカードを配る　ディラーの2枚目のカードは不明と出力
         $dealer_card_key = array_rand($deck);
         $dealer_score = $deck[$dealer_card_key]['card_score'];
         echo 'ディーラー1枚目のカードは'.$deck[$dealer_card_key ]['type'].'の'.$deck[$dealer_card_key ]['number'].'です'."\n";
@@ -109,7 +111,7 @@ class Game {
 
         $player_decision = '';
     
-        // fopen に失敗した場合、これを記述しておかないと下の while で無限ループが発生する。
+    
         if ( ! $stdin) {
             exit("[error] STDIN failure.\n");
         }
