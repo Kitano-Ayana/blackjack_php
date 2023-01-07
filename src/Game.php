@@ -35,19 +35,17 @@ class Game {
             $this->dealerPlay();
             $this->judgeContinue();
             $this->gameStart();
-        }else
-        //２回目以降のゲーム
-        if($this->player->getStatus() == 'Continue'){
+        //２回目以降のゲーム    
+        }else if($this->player->getStatus() == 'Continue'){
             $this->continuePlay();
             if($this->score->getDealerScore() < 17){
                 $this->dealerPlay();
             }
             $this->judgeContinue();
             $this->gameStart();
-        }else
-        //プレイヤーがゲーム終了を選択
-        if($this->player->getStatus() == 'End'){
-           $this->result();
+        //ゲーム終了を選択    
+        }else if($this->player->getStatus() == 'End'){
+            $this->result();
         }  
         
     }
@@ -111,19 +109,17 @@ class Game {
 
         $player_decision = '';
     
-    
-        if ( ! $stdin) {
+        if(!$stdin){
             exit("[error] STDIN failure.\n");
+        }else{
+            echo "もう一枚カードを引きますか? [y/n]: ";
+            $player_decision = trim(fgets(STDIN));
+            if($player_decision === 'y'){
+                $this->player->setStatus('Continue');
+            }else if($player_decision === 'n'){
+                $this->player->setStatus('End');
+            }   
         }
-
-        echo "もう一枚カードを引きますか? [y/n]: ";
-        $player_decision = trim(fgets(STDIN));
-        if($player_decision === 'y'){
-            $this->player->setStatus('Continue');
-        }else
-        if($player_decision === 'n'){
-            $this->player->setStatus('End');
-        }   
 
     }
     public function result()
@@ -132,7 +128,9 @@ class Game {
         echo "ディーラのカードスコアは、".$this->score->getDealerScore()."です。\n";
         if($this->score->getPlayerScore() >  $this->score->getDealerScore() ||$this->score->getDealerScore() > 21 ){
             echo "あなたの勝ちです。";
-        }else  echo "あなたの負けです。";
+        }else{
+            echo "あなたの負けです。";
+        }  
 
 
     }
