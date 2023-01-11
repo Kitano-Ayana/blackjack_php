@@ -1,10 +1,11 @@
 <?php
 
 require_once('Card.php');
+require_once('Cards.php');
+require_once('Deck.php');
 require_once('Player.php');
-require_once('Dealer.php');
-require_once('Hand.php');
 require_once('Score.php');
+require_once('Message.php');
 
 /**
  *  ゲームクラスで実装すること
@@ -21,26 +22,48 @@ require_once('Score.php');
 
 class Game {
 
+    public function __construct(){
+    
+    }
+
     public function gameStart()
     {
         $this->card = !empty($this->card) ? $this->card : new Card();
-        $this->hand = !empty($this->hand) ? $this->hand : new Hand();
+        $this->cards = !empty($this->cards) ? $this->cards : new Cards();
+        $this->deck = !empty($this->deck) ? $this->deck : new Deck();
         $this->score = !empty($this->score) ? $this->score : new Score();
         $this->player = !empty($this->player) ? $this->player : new Player();
-        $this->dealer = !empty($this->dealer) ? $this->dealer : new Dealer();
+        $this->message = !empty($this->message) ? $this->message : new Message();
 
         //最初のゲーム
         if($this->player->getStatus() == NULL){
-            $this->firstDeal();
-            $this->dealerPlay();
+
+            $card = $this->deck->deal();
+            $this->score->setPlayerScore($card['card_score']);
+            echo $this->message->firstPlayerMessage($card);
+
+            $card = $this->deck->deal();
+            $this->score->setPlayerScore($card['card_score']);
+            echo $this->message->secondPlayerMessage($card);
+            
+            $card = $this->deck->deal();
+            $this->score->setDealerScore($card['card_score']);
+            echo $this->message->firstDealerMessage($card);
+            
+
+            $card = $this->deck->deal();
+            $this->score->setDealerScore($card['card_score']);
+            echo $this->message->DealerMessage($card);
+
             $this->judgeContinue();
             $this->gameStart();
         //２回目以降のゲーム    
         }else if($this->player->getStatus() == 'Continue'){
-            $this->continuePlay();
-            if($this->score->getDealerScore() < 17){
-                $this->dealerPlay();
-            }
+            $this->deck->deal();
+            echo $this->message->PlayerMessage($this->deck);
+
+            $this->deck->deal();
+            echo $this->message->DealerMessage($this->deck);
             $this->judgeContinue();
             $this->gameStart();
         //ゲーム終了を選択    
@@ -49,59 +72,6 @@ class Game {
         }  
         
     }
-
-    public function firstDeal()
-    {
-        //カードをとってくる
-        $deck = $this->card->createDeck();
-
-        //カードを配る & あなたのカードはこれです　と出力
-        $player_card_key = array_rand($deck);
-        $player_socre = $deck[$player_card_key]['card_score'];
-        echo 'あなたの1枚目のカードは'.$deck[$player_card_key ]['type'].'の'.$deck[$player_card_key ]['number'].'です'."\n";
-
-        $player_card_key = array_rand($deck);
-        $player_socre += $deck[$player_card_key]['card_score'];
-        echo 'あなたの2枚目のカードは'.$deck[$player_card_key ]['type'].'の'.$deck[$player_card_key ]['number'].'です'."\n";
-
-
-        $this->score->setPlayerScore($player_socre);
-
-        //ディーラのカードを配る　ディラーの2枚目のカードは不明と出力
-        $dealer_card_key = array_rand($deck);
-        $dealer_score = $deck[$dealer_card_key]['card_score'];
-        echo 'ディーラー1枚目のカードは'.$deck[$dealer_card_key ]['type'].'の'.$deck[$dealer_card_key ]['number'].'です'."\n";
-
-        $dealer_card_key = array_rand($deck);
-        $dealer_score += $deck[$dealer_card_key]['card_score'];
-        echo 'ディーラーの2枚目のカードは分かりません。'."\n";
-
-        $this->score->setDealerScore($dealer_score);
-        $this->player->setStatus('Continue');     
-    }
-
-    public function continuePlay()
-    {
-        //カードをとってくる
-        $deck = $this->card->createDeck();
-
-        //カードを配る & あなたのカードはこれです　と出力
-        $player_card_key = array_rand($deck);
-        $player_socre = $deck[$player_card_key]['card_score'];
-        echo 'あなたのカードは'.$deck[$player_card_key ]['type'].'の'.$deck[$player_card_key ]['number'].'です'."\n";
-
-        //スコアを格納
-        $this->score->setPlayerScore($this->score->getPlayerScore() +$player_socre);
-
-    }
-
-    public function checkScore()
-    {
-        if($this->score->getPlayerScore() > 21){
-            $this->player->setStatus('End');
-        }
-    }
-
 
     public function judgeContinue()
     {
@@ -131,19 +101,6 @@ class Game {
         }else{
             echo "あなたの負けです。";
         }  
-
-
     }
 
-    public function dealerPlay()
-    {
-        //カードをとってくる
-        $deck = $this->card->createDeck();
-
-        $dealer_card_key = array_rand($deck);
-        $dealer_score = $deck[$dealer_card_key]['card_score'];
-        echo 'ディーラーのカードは'.$deck[$dealer_card_key ]['type'].'の'.$deck[$dealer_card_key ]['number'].'です'."\n";
-
-        $this->score->setDealerScore($this->score->getDealerScore() + $dealer_score);
-    }
 }    
