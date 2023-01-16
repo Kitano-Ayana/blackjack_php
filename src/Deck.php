@@ -1,5 +1,4 @@
 <?php
-
 require_once('Card.php');
 
 class Deck{
@@ -19,7 +18,7 @@ class Deck{
 
     public function deal() {
         //デッキを作成していない場合は作成する
-        if(!$this->cards){
+        if(! $this->cards){
             $this->cards = $this->makeDeck();
         }
     

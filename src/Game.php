@@ -28,15 +28,15 @@ class Game {
 
     public function gameStart()
     {
-        $this->card = !empty($this->card) ? $this->card : new Card();
-        $this->cards = !empty($this->cards) ? $this->cards : new Cards();
-        $this->deck = !empty($this->deck) ? $this->deck : new Deck();
-        $this->score = !empty($this->score) ? $this->score : new Score();
-        $this->player = !empty($this->player) ? $this->player : new Player();
-        $this->message = !empty($this->message) ? $this->message : new Message();
+        $this->card = ! empty($this->card) ? $this->card : new Card();
+        $this->cards = ! empty($this->cards) ? $this->cards : new Cards();
+        $this->deck = ! empty($this->deck) ? $this->deck : new Deck();
+        $this->score = ! empty($this->score) ? $this->score : new Score();
+        $this->player = ! empty($this->player) ? $this->player : new Player();
+        $this->message = ! empty($this->message) ? $this->message : new Message();
 
         //最初のゲーム
-        if($this->player->getStatus() == NULL){
+        if($this->player->getStatus() === NULL){
 
             $card = $this->deck->deal();
             $this->score->setPlayerScore($card['card_score']);
@@ -58,7 +58,7 @@ class Game {
             $this->judgeContinue();
             $this->gameStart();
         //２回目以降のゲーム    
-        }else if($this->player->getStatus() == 'Continue'){
+        }else if($this->player->getStatus() === 'Continue'){
             $this->deck->deal();
             echo $this->message->PlayerMessage($this->deck);
 
@@ -67,7 +67,7 @@ class Game {
             $this->judgeContinue();
             $this->gameStart();
         //ゲーム終了を選択    
-        }else if($this->player->getStatus() == 'End'){
+        }else if($this->player->getStatus() === 'End'){
             $this->result();
         }  
         
@@ -79,7 +79,7 @@ class Game {
 
         $player_decision = '';
     
-        if(!$stdin){
+        if(! $stdin){
             exit("[error] STDIN failure.\n");
         }else{
             echo "もう一枚カードを引きますか? [y/n]: ";

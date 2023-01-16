@@ -13,7 +13,7 @@ class Player{
         echo "もう一枚カードを引きますか? [y/n]: ";
 
         $stdin = fopen("php://stdin", "r");
-        $resposne =  trim(fgets($stdin, 64)) == 'y' ? 'continue' : 'stop';
+        $resposne =  trim(fgets($stdin, 64)) === 'y' ? 'continue' : 'stop';
 
         return $resposne;
     }
