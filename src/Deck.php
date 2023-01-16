@@ -2,9 +2,20 @@
 
 require_once('Card.php');
 
-class Deck extends Card {
-    //Card配列
-    private $cards;
+class Deck{
+
+     //Card配列
+     private $cards;
+
+    // デッキを初期化する
+    function __construct() {
+        $this->cards = [];
+        foreach(Cards::TYPES as $type){
+            for($i = 0; $i < count(Cards::NUMBERS); $i++){
+                $this->cards[] = new Card($type, Cards::NUMBERS[$i], Cards::SCORES[$i]);
+            }
+        };
+    }
 
     public function deal() {
         //デッキを作成していない場合は作成する
