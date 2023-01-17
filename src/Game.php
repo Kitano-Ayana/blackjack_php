@@ -23,37 +23,34 @@ require_once('Message.php');
 class Game {
 
     public function __construct(){
-    
-    }
-
-    public function gameStart()
-    {
-        $this->card = ! empty($this->card) ? $this->card : new Card();
-        $this->cards = ! empty($this->cards) ? $this->cards : new Cards();
         $this->deck = ! empty($this->deck) ? $this->deck : new Deck();
         $this->score = ! empty($this->score) ? $this->score : new Score();
         $this->player = ! empty($this->player) ? $this->player : new Player();
         $this->message = ! empty($this->message) ? $this->message : new Message();
+    }
+
+    public function gameStart()
+    {
 
         //最初のゲーム
         if($this->player->getStatus() === NULL){
 
-            $card = $this->deck->deal();
-            $this->score->setPlayerScore($card['card_score']);
-            echo $this->message->firstPlayerMessage($card);
+            $player_card = $this->deck->deal();
+            $this->score->setPlayerScore($player_card->score);
+            echo $this->message->firstPlayerMessage($player_card);
 
-            $card = $this->deck->deal();
-            $this->score->setPlayerScore($card['card_score']);
-            echo $this->message->secondPlayerMessage($card);
+            $player_card = $this->deck->deal();
+            $this->score->setPlayerScore($player_card->score);
+            echo $this->message->secondPlayerMessage($player_card);
             
             $card = $this->deck->deal();
-            $this->score->setDealerScore($card['card_score']);
+            $this->score->setDealerScore($card->score);
             echo $this->message->firstDealerMessage($card);
             
 
             $card = $this->deck->deal();
-            $this->score->setDealerScore($card['card_score']);
-            echo $this->message->DealerMessage($card);
+            $this->score->setDealerScore($card->score);
+            echo $this->message->DealerMessage();
 
             $this->judgeContinue();
             $this->gameStart();

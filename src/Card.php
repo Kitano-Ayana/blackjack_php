@@ -3,9 +3,9 @@
 require_once('Cards.php');
 
 class Card{
-    private $type;
-    private $number;
-    private $score;
+    public $type;
+    public $number;
+    public $score;
 
     function __construct($type, $number, $score) {
         $this->type = $type;
