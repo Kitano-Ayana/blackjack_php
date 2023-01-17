@@ -1,6 +1,5 @@
 <?php
-
-interface PlayerActionInterface {
+interface PlayerAction {
 
     public function drawCard();
 
